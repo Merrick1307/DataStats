@@ -491,9 +491,10 @@ To use this module, ensure you have the following dependencies:
 ## OR
 to get these dependencies use;
 
-` bash
+`
 pip install -r requirements.txt
 `
+on your command line
 
 
 ### Package Usage:
