@@ -318,10 +318,100 @@ Entry point supporting three execution modes:
 - auto: Enables scheduled execution
 - manual: User-triggered execution
 
-Usage:
-```bash
-python main.py [default|auto|manual]
+
+# DataVisuals Module
+
+## Overview
+The DataVisuals module is a Python component designed to generate statistical control charts from database-sourced manufacturing or quality control data. It visualizes key statistical metrics and control limits for product measurements across different SKUs (Stock Keeping Units).
+
+## Dependencies
+- `datetime`: For timestamp generation
+- `pathlib`: For directory and file path management
+- `pandas`: For data manipulation and DataFrame operations
+- `matplotlib.pyplot`: For creating statistical visualizations
+- Custom modules:
+  - `DataStats.app.core`
+  - `DataStats.app.core.config`
+  - `DataStats.app.database`
+
+## Key Functions
+
+### `visualize()`
+Generates a control chart based on statistical data retrieved from a database.
+
+#### Workflow
+1. **Data Retrieval**
+   - Fetches data from a specified database and table using `db_manager.view_table()`
+   - Converts retrieved data into a pandas DataFrame
+
+2. **Statistical Calculations**
+   - Creates columns for:
+     - Upper Control Limit (UCL): Mean + (3 * Standard Deviation)
+     - Lower Control Limit (LCL): Mean - (3 * Standard Deviation)
+
+3. **Visualization**
+   - Plots a comprehensive control chart showing:
+     - Mean values across SKUs
+     - Control limits (UCL and LCL)
+     - Specification limits (USL and LSL)
+
+#### Parameters
+- No explicit input parameters
+- Uses configuration from imported modules (`DB_NAME`, `TABLE_NAME`, `AUTO_RUN`)
+
+#### Chart Components
+- **Blue Line**: Mean values
+- **Light Grey Area**: Control Limits (±3 Standard Deviations)
+- **Orange Dashed Line**: Lower Specification Limit (LSL)
+- **Purple Dashed Line**: Upper Specification Limit (USL)
+
+#### Output
+- Saves a PNG image of the control chart
+- Filename format: `control_chart_YYYYMMDD_HHMMSS.png`
+- Output directory: `./visuals/`
+
+## Configuration Variables
+- `DB_NAME`: Database name
+- `TABLE_NAME`: Table containing statistical data
+- `AUTO_RUN`: Controls whether the plot is automatically displayed
+
+## Usage Example
+```python
+from DataStats.app.DataVisuals import visualize
+
+# Generate control chart
+visualize()
 ```
+
+## Best Practices
+- Ensure database connection is established before calling `visualize()`
+- Verify data consistency in the source table
+- Check that required columns exist before visualization
+
+## Potential Improvements (# TODO)
+- Add error handling for database connection issues
+- Make chart parameters configurable
+- Add support for multiple data series
+
+## Troubleshooting
+- **No image generated**: 
+  - Check database connection
+  - Verify data in the source table
+  - Confirm `AUTO_RUN` setting
+- **Matplotlib errors**: 
+  - Ensure all dependencies are correctly installed
+  - Check matplotlib and pandas versions for compatibility
+
+## Performance Considerations (# TODO)
+- Large datasets may impact rendering speed
+- Consider implementing data sampling or pagination for extensive datasets
+
+## Version (1.0.0)
+- Compatible with Python 3.7+
+- Tested with pandas 1.3.0+
+- Tested with matplotlib 3.4.0+
+
+
 
 # Database Initialization
 
@@ -391,3 +481,29 @@ Required environment variables:
 
 ## Installation
 To use this module, ensure you have the following dependencies:
+- pandas>=2.2.0
+- mysql-connector-python>=9.2.0
+- openpyxl>=3.1.5
+- python-dotenv>=1.0.1
+- schedule>=1.2.2
+- matplotlib>=3.10.0
+
+## OR
+to get these dependencies use;
+
+` bash
+pip install -r requirements.txt
+`
+
+
+### Package Usage:
+```bash
+python DataStats.app.main.py [default|auto|manual]
+```
+
+
+## License
+[MIT]
+
+## Author
+[MUHAMMED YUSUF]
